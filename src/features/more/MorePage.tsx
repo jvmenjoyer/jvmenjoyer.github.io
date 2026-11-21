@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Calculator,
   CalendarDays,
   ChevronRight,
   ClipboardList,
@@ -41,6 +42,12 @@ const ITEMS: MoreItem[] = [
     title: 'Прогресс',
     description: 'Объём, частота и личные рекорды',
     icon: BarChart3,
+  },
+  {
+    to: '/tools',
+    title: 'Калькуляторы',
+    description: '1ПМ, блины и разминочные подходы',
+    icon: Calculator,
   },
   {
     to: '/exercises',

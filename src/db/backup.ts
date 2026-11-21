@@ -57,11 +57,11 @@ export async function exportBackupJson(): Promise<void> {
   downloadJson(`athly-backup-${fileStamp()}.json`, payload)
 }
 
-export async function importBackup(file: File): Promise<void> {
+function parseBackup(text: string): BackupPayload {
   let parsed: unknown
 
   try {
-    parsed = JSON.parse(await file.text())
+    parsed = JSON.parse(text)
   } catch {
     throw new Error('Файл не является корректным JSON')
   }
@@ -71,8 +71,10 @@ export async function importBackup(file: File): Promise<void> {
     throw new Error('Файл не похож на резервную копию Athly')
   }
 
-  const data = result.data as unknown as BackupPayload
+  return result.data as unknown as BackupPayload
+}
 
+export async function applyBackupPayload(data: BackupPayload): Promise<void> {
   await db.transaction(
     'rw',
     [db.programs, db.workouts, db.measurements, db.exercises, db.settings],
@@ -105,4 +107,12 @@ export async function importBackup(file: File): Promise<void> {
       }
     },
   )
+}
+
+export async function importBackupJson(text: string): Promise<void> {
+  await applyBackupPayload(parseBackup(text))
+}
+
+export async function importBackup(file: File): Promise<void> {
+  await importBackupJson(await file.text())
 }

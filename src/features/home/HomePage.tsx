@@ -1,4 +1,5 @@
 import { subDays } from 'date-fns'
+import { useMemo } from 'react'
 import type { ReactNode } from 'react'
 import {
   ArrowRight,
@@ -16,8 +17,10 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardTitle } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeader } from '@/components/ui/PageHeader'
-import { useMeasurements, usePrograms, useWorkouts } from '@/db/hooks'
+import { useExercises, useMeasurements, usePrograms, useSettings, useWorkouts } from '@/db/hooks'
 import { buildEmptyWorkout, saveWorkout } from '@/db/repo'
+import type { Exercise, Workout } from '@/db/types'
+import { activeProgram, buildSuggestedWorkout, nextProgramDay } from '@/lib/progression'
 import { fullDate, humanDate, toISODate } from '@/lib/date'
 import { formatVolume, formatWeight, pluralRu } from '@/lib/format'
 import { totalVolume, workoutStats } from '@/lib/stats'
@@ -27,6 +30,36 @@ export function HomePage() {
   const workouts = useWorkouts()
   const programs = usePrograms()
   const measurements = useMeasurements()
+  const settings = useSettings()
+  const exercises = useExercises()
+
+  const exerciseMap = useMemo(
+    () => new Map(exercises.map((exercise) => [exercise.id, exercise])),
+    [exercises],
+  )
+  const nextProgram = activeProgram(programs, workouts, settings?.activeProgramId)
+  const nextDay = nextProgram ? nextProgramDay(nextProgram, workouts) : undefined
+  const suggestedWorkout = useMemo(
+    () =>
+      nextProgram && nextDay && exercises.length > 0
+        ? buildSuggestedWorkout(
+            nextProgram,
+            nextDay,
+            workouts,
+            exerciseMap,
+            undefined,
+            settings?.progressionEnabled !== false,
+          )
+        : null,
+    [
+      nextProgram,
+      nextDay,
+      workouts,
+      exerciseMap,
+      exercises.length,
+      settings?.progressionEnabled,
+    ],
+  )
 
   const active = workouts.find((workout) => !workout.finishedAt)
   const finished = workouts.filter((workout) => workout.finishedAt)
@@ -44,6 +77,12 @@ export function HomePage() {
     const workout = buildEmptyWorkout()
     await saveWorkout(workout)
     navigate(`/workout/${workout.id}`)
+  }
+
+  async function startSuggested() {
+    if (!suggestedWorkout) return
+    await saveWorkout(suggestedWorkout)
+    navigate(`/workout/${suggestedWorkout.id}`)
   }
 
   return (
@@ -79,6 +118,16 @@ export function HomePage() {
             Продолжить
           </Button>
         </Card>
+      ) : suggestedWorkout && nextProgram ? (
+        <NextWorkoutCard
+          programName={nextProgram.name}
+          dayName={nextDay?.name ?? 'День 1'}
+          workout={suggestedWorkout}
+          exerciseMap={exerciseMap}
+          progressionEnabled={settings?.progressionEnabled !== false}
+          onStart={startSuggested}
+          onEmpty={startEmpty}
+        />
       ) : (
         <Card className="relative mb-4 overflow-hidden border-accent/25 bg-gradient-to-br from-accent-soft to-surface">
           <div className="pointer-events-none absolute -right-16 -top-20 h-44 w-44 rounded-full bg-accent/10 blur-3xl" />
@@ -250,5 +299,93 @@ function QuickLink({
         <span className="block truncate text-[10px] text-muted">{hint}</span>
       </span>
     </Link>
+  )
+}
+
+function NextWorkoutCard({
+  programName,
+  dayName,
+  workout,
+  exerciseMap,
+  progressionEnabled,
+  onStart,
+  onEmpty,
+}: {
+  programName: string
+  dayName: string
+  workout: Workout
+  exerciseMap: Map<string, Exercise>
+  progressionEnabled: boolean
+  onStart: () => void
+  onEmpty: () => void
+}) {
+  return (
+    <Card className="relative mb-4 overflow-hidden border-accent/25 bg-gradient-to-br from-accent-soft to-surface">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-44 w-44 rounded-full bg-accent/10 blur-3xl" />
+      <div className="relative flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[10px] uppercase tracking-wide text-accent">
+            Следующая тренировка
+          </p>
+          <p className="mt-1 text-lg font-semibold">
+            {programName} — {dayName}
+          </p>
+          <p className="mt-0.5 text-[11px] text-muted">
+            {progressionEnabled
+              ? 'Веса подобраны по последним результатам'
+              : 'Автопрогрессия выключена в настройках'}
+          </p>
+        </div>
+        <Link to="/programs" className="shrink-0 text-xs text-accent">
+          Сменить
+        </Link>
+      </div>
+
+      <div className="relative mt-3 space-y-1.5">
+        {workout.exercises.slice(0, 4).map((item) => {
+          const exercise = exerciseMap.get(item.exerciseId)
+          const weight = item.sets[0]?.weight ?? 0
+          return (
+            <div key={item.id} className="flex items-center gap-2 text-xs">
+              <span className="min-w-0 flex-1 truncate text-muted">
+                {exercise?.nameRu ?? 'Упражнение'}
+              </span>
+              <span className="shrink-0 tabular">
+                {!progressionEnabled
+                  ? '—'
+                  : weight > 0
+                    ? formatWeight(weight)
+                    : 'свой вес'}
+              </span>
+              <span className="w-14 shrink-0 text-right text-[10px] text-faint">
+                {item.targetSets ?? item.sets.length}×{item.targetReps ?? '—'}
+              </span>
+            </div>
+          )
+        })}
+        {workout.exercises.length === 0 ? (
+          <p className="text-[11px] text-muted">В этом дне пока нет упражнений.</p>
+        ) : null}
+        {workout.exercises.length > 4 ? (
+          <p className="text-[10px] text-faint">+ ещё {workout.exercises.length - 4}</p>
+        ) : null}
+      </div>
+
+      <div className="relative mt-4 flex gap-2">
+        <Button
+          variant="primary"
+          size="md"
+          className="flex-1"
+          leading={<Play size={16} />}
+          onClick={onStart}
+          disabled={workout.exercises.length === 0}
+        >
+          Начать
+        </Button>
+        <Button variant="secondary" size="md" onClick={onEmpty}>
+          С нуля
+        </Button>
+      </div>
+    </Card>
   )
 }

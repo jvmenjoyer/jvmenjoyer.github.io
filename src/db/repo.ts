@@ -1,4 +1,5 @@
 import { db } from './db'
+import { maybeAutoBackup } from './autoBackup'
 import { newId, nowISO } from '@/lib/id'
 import { round1 } from '@/lib/format'
 import { todayISO } from '@/lib/date'
@@ -84,6 +85,9 @@ export async function saveWorkout(workout: Workout): Promise<void> {
 
 export async function finishWorkout(workout: Workout): Promise<void> {
   await saveWorkout({ ...workout, finishedAt: workout.finishedAt ?? nowISO() })
+  void maybeAutoBackup('После тренировки').catch((error) => {
+    console.error('Не удалось создать автокопию', error)
+  })
 }
 
 export async function deleteWorkout(id: string): Promise<void> {

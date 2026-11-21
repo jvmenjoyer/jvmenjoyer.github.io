@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { RestTimerBar } from './components/RestTimerBar'
 import { AppShell } from './app/AppShell'
 import { CalendarPage } from './features/calendar/CalendarPage'
 import { CoachPage } from './features/coach/CoachPage'
@@ -12,6 +13,7 @@ import { ProgramEditorPage } from './features/programs/ProgramEditorPage'
 import { ProgramsPage } from './features/programs/ProgramsPage'
 import { ProgressPage } from './features/progress/ProgressPage'
 import { SettingsPage } from './features/settings/SettingsPage'
+import { CalculatorsPage } from './features/tools/CalculatorsPage'
 import { WorkoutDetailPage } from './features/workouts/WorkoutDetailPage'
 import { WorkoutPage } from './features/workouts/WorkoutPage'
 
@@ -42,25 +44,29 @@ export default function App({ catalogError }: AppProps) {
   }
 
   return (
-    <Routes>
-      <Route element={<AppShell />}>
-        <Route index element={<HomePage />} />
-        <Route path="exercises" element={<ExercisesPage />} />
-        <Route path="exercises/:id" element={<ExerciseDetailPage />} />
-        <Route path="coach" element={<CoachPage />} />
-        <Route path="programs" element={<ProgramsPage />} />
-        <Route path="programs/:id" element={<ProgramDetailPage />} />
-        <Route path="programs/:id/edit" element={<ProgramEditorPage />} />
-        <Route path="programs/new" element={<ProgramEditorPage />} />
-        <Route path="calendar" element={<CalendarPage />} />
-        <Route path="workouts/:id" element={<WorkoutDetailPage />} />
-        <Route path="measurements" element={<MeasurementsPage />} />
-        <Route path="progress" element={<ProgressPage />} />
-        <Route path="settings" element={<SettingsPage />} />
-        <Route path="more" element={<MorePage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-      <Route path="workout/:id" element={<WorkoutPage />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<HomePage />} />
+          <Route path="exercises" element={<ExercisesPage />} />
+          <Route path="exercises/:id" element={<ExerciseDetailPage />} />
+          <Route path="coach" element={<CoachPage />} />
+          <Route path="programs" element={<ProgramsPage />} />
+          <Route path="programs/:id" element={<ProgramDetailPage />} />
+          <Route path="programs/:id/edit" element={<ProgramEditorPage />} />
+          <Route path="programs/new" element={<ProgramEditorPage />} />
+          <Route path="calendar" element={<CalendarPage />} />
+          <Route path="workouts/:id" element={<WorkoutDetailPage />} />
+          <Route path="measurements" element={<MeasurementsPage />} />
+          <Route path="progress" element={<ProgressPage />} />
+          <Route path="tools" element={<CalculatorsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="more" element={<MorePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+        <Route path="workout/:id" element={<WorkoutPage />} />
+      </Routes>
+      <RestTimerBar />
+    </>
   )
 }

@@ -69,6 +69,7 @@ export interface WorkoutExercise {
   targetSets?: number
   targetReps?: string
   restSec?: number
+  autoNote?: string
 }
 
 export interface Workout extends SyncMeta {
@@ -104,7 +105,18 @@ export interface AppSettings extends SyncMeta {
   unit: 'kg'
   catalogVersion?: string
   programsSeeded?: boolean
+  activeProgramId?: string
+  defaultRestSec?: number
+  autoRestTimer?: boolean
+  progressionEnabled?: boolean
   createdAt: string
+}
+
+export interface BackupSnapshot {
+  id: string
+  createdAt: string
+  reason: string
+  json: string
 }
 
 export type CoachRole = 'user' | 'assistant'

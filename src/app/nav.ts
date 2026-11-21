@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Calculator,
   CalendarDays,
   ClipboardList,
   Dumbbell,
@@ -24,6 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/programs', label: 'Программы', icon: ClipboardList },
   { to: '/measurements', label: 'Замеры', icon: Ruler },
   { to: '/progress', label: 'Прогресс', icon: BarChart3 },
+  { to: '/tools', label: 'Калькуляторы', icon: Calculator },
   { to: '/settings', label: 'Настройки', icon: Settings },
 ]
 
@@ -32,6 +34,7 @@ export const MOBILE_MORE_PREFIXES = [
   '/calendar',
   '/measurements',
   '/progress',
+  '/tools',
   '/settings',
   '/workouts',
 ]

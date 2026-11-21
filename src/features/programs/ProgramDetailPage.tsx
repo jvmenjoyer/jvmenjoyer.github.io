@@ -5,15 +5,16 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardTitle } from '@/components/ui/Card'
 import { PageHeader } from '@/components/ui/PageHeader'
-import { useExercises, useProgram } from '@/db/hooks'
+import { useExercises, useProgram, useSettings, useWorkouts } from '@/db/hooks'
 import {
-  buildWorkoutFromProgram,
   deleteProgram,
   duplicateProgram,
   saveWorkout,
+  updateSettings,
 } from '@/db/repo'
 import type { ProgramDay } from '@/db/types'
 import { GOAL_LABELS, levelLabel } from '@/lib/labels'
+import { buildSuggestedWorkout } from '@/lib/progression'
 import { toast } from '@/store/toast'
 
 export function ProgramDetailPage() {
@@ -21,6 +22,8 @@ export function ProgramDetailPage() {
   const navigate = useNavigate()
   const program = useProgram(id)
   const exercises = useExercises()
+  const workouts = useWorkouts()
+  const settings = useSettings()
 
   const exerciseById = useMemo(
     () => new Map(exercises.map((exercise) => [exercise.id, exercise])),
@@ -40,9 +43,22 @@ export function ProgramDetailPage() {
 
   async function startDay(day: ProgramDay) {
     if (!program) return
-    const workout = buildWorkoutFromProgram(program, day)
+    const workout = buildSuggestedWorkout(
+      program,
+      day,
+      workouts,
+      exerciseById,
+      undefined,
+      settings?.progressionEnabled !== false,
+    )
     await saveWorkout(workout)
     navigate(`/workout/${workout.id}`)
+  }
+
+  async function activateProgram() {
+    if (!program) return
+    await updateSettings({ activeProgramId: program.id })
+    toast('Программа выбрана активной', 'success')
   }
 
   async function handleCopy() {
@@ -69,6 +85,8 @@ export function ProgramDetailPage() {
       toast(error instanceof Error ? error.message : 'Не удалось удалить программу', 'error')
     }
   }
+
+  const isActive = settings?.activeProgramId === program.id
 
   return (
     <div>
@@ -119,6 +137,29 @@ export function ProgramDetailPage() {
           ) : null}
         </Card>
       ) : null}
+
+      <Card className="mb-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-medium">
+              {isActive ? 'Активная программа' : 'Следующая тренировка'}
+            </p>
+            <p className="mt-0.5 text-[10px] leading-relaxed text-muted">
+              {isActive
+                ? 'На главной веса подставляются по последним результатам'
+                : 'Выбери программу, чтобы на главной появилась кнопка «Начать»'}
+            </p>
+          </div>
+          <Button
+            variant={isActive ? 'secondary' : 'primary'}
+            size="sm"
+            onClick={activateProgram}
+            disabled={isActive}
+          >
+            {isActive ? 'Активна' : 'Сделать активной'}
+          </Button>
+        </div>
+      </Card>
 
       <div className="space-y-3">
         {program.days.map((day) => (

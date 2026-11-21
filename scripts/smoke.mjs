@@ -35,7 +35,7 @@ await page.getByRole('heading', { name: 'Сегодня', exact: true }).waitFor
 await page.waitForTimeout(1500)
 
 let text = await bodyText()
-assertIncludes(text, 'Готов начать?', 'Нет приветственного блока')
+assertIncludes(text, 'Следующая тренировка', 'Нет блока следующей тренировки')
 assertIncludes(text, 'За неделю')
 
 // Упражнения
@@ -73,6 +73,8 @@ await page.getByRole('button', { name: 'Завершить', exact: true }).wait
 await page.getByLabel('Вес').first().fill('100')
 await page.getByLabel('Повторы').first().fill('5')
 await page.getByRole('button', { name: 'Добавить подход' }).first().click()
+await page.getByLabel('Подход выполнен').first().click()
+await page.getByText('Отдых ·', { exact: false }).first().waitFor({ timeout: 5000 })
 await page.waitForTimeout(300)
 await page.screenshot({ path: `${SHOT_DIR}/athly-workout.png`, fullPage: true })
 
@@ -110,10 +112,26 @@ await page.getByRole('heading', { name: 'Прогресс', exact: true }).waitF
 text = await bodyText()
 assertIncludes(text, 'Рекорды')
 
+// Калькуляторы
+await page.goto(`${BASE}/#/tools`, { waitUntil: 'networkidle' })
+await page.getByRole('heading', { name: 'Калькуляторы', exact: true }).waitFor()
+text = await bodyText()
+assertIncludes(text, 'Максимум на один повтор', 'Нет калькулятора 1ПМ')
+assertIncludes(text, 'Блины на штангу', 'Нет калькулятора блинов')
+assertIncludes(text, 'Разминочные подходы', 'Нет калькулятора разминки')
+
 await page.goto(`${BASE}/#/settings`, { waitUntil: 'networkidle' })
 await page.getByRole('heading', { name: 'Настройки', exact: true }).waitFor()
 text = await bodyText()
 assertIncludes(text, '876', 'В настройках нет количества упражнений')
+assertIncludes(text, 'Автостарт таймера', 'Нет настройки таймера отдыха')
+assertIncludes(text, 'Автопрогрессия', 'Нет настройки автопрогрессии')
+assertIncludes(text, 'Создать копию сейчас', 'Нет автобэкапа')
+await page.getByRole('button', { name: /Создать копию сейчас/ }).click()
+await page.getByText('Копия создана').waitFor({ timeout: 10000 })
+await page.waitForTimeout(300)
+text = await bodyText()
+assertIncludes(text, 'Резервные копии', 'Копия не появилась в списке')
 
 await page.goto(BASE, { waitUntil: 'networkidle' })
 await page.getByRole('heading', { name: 'Сегодня', exact: true }).waitFor()

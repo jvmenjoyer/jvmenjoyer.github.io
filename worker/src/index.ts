@@ -119,6 +119,10 @@ export default {
       return jsonResponse({ ok: true, model: env.MODEL }, 200, origin)
     }
 
+    if (url.pathname === '/' && request.method === 'GET') {
+      return Response.redirect('https://jvmenjoyer.github.io/', 302)
+    }
+
     if (url.pathname !== '/chat') {
       return jsonResponse({ error: 'not_found' }, 404, origin)
     }

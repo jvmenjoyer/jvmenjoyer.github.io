@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom'
 import App from './App'
 import { AppErrorBoundary } from './components/AppErrorBoundary'
 import { ensureCatalog } from './db/catalog'
+import { maybeAutoBackup } from './db/autoBackup'
 import './index.css'
 
 async function bootstrap() {
@@ -11,6 +12,9 @@ async function bootstrap() {
 
   try {
     await ensureCatalog()
+    void maybeAutoBackup('Автокопия при запуске').catch((error) => {
+      console.error('Не удалось создать автокопию', error)
+    })
   } catch (error) {
     console.error('Не удалось подготовить базу упражнений', error)
     catalogError =

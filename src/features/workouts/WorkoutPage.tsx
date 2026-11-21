@@ -7,13 +7,15 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Textarea } from '@/components/ui/Input'
-import { useExercises, useWorkout, useWorkouts } from '@/db/hooks'
+import { useExercises, useSettings, useWorkout, useWorkouts } from '@/db/hooks'
 import { finishWorkout, saveWorkout } from '@/db/repo'
-import type { Exercise, Workout, WorkoutSet } from '@/db/types'
+import type { Exercise, Workout, WorkoutExercise, WorkoutSet } from '@/db/types'
 import { fullDate, humanDate } from '@/lib/date'
 import { formatDuration, numberToInput, parseNumber } from '@/lib/format'
 import { lastPerformance } from '@/lib/stats'
 import { newId } from '@/lib/id'
+import { unlockAudio } from '@/lib/beep'
+import { useRestTimer } from '@/store/restTimer'
 import { cn } from '@/lib/cn'
 import { toast } from '@/store/toast'
 
@@ -27,6 +29,9 @@ export function WorkoutPage() {
   const workout = useWorkout(id)
   const exercises = useExercises()
   const allWorkouts = useWorkouts()
+  const settings = useSettings()
+  const startRest = useRestTimer((state) => state.start)
+  const stopRest = useRestTimer((state) => state.stop)
 
   const [draft, setDraft] = useState<Workout | null>(null)
   const draftRef = useRef<Workout | null>(null)
@@ -132,6 +137,26 @@ export function WorkoutPage() {
     }))
   }
 
+  function restSeconds(item: WorkoutExercise): number {
+    return item.restSec ?? settings?.defaultRestSec ?? 90
+  }
+
+  function startRestFor(item: WorkoutExercise, exercise?: Exercise) {
+    unlockAudio()
+    startRest(
+      restSeconds(item),
+      exercise?.nameRu ? `Отдых · ${exercise.nameRu}` : 'Отдых',
+    )
+  }
+
+  function toggleSetDone(item: WorkoutExercise, set: WorkoutSet, exercise?: Exercise) {
+    const next = !set.done
+    updateSet(item.id, set.id, { done: next })
+    if (next && !set.warmup && settings?.autoRestTimer !== false) {
+      startRestFor(item, exercise)
+    }
+  }
+
   function addExercise(exercise: Exercise) {
     mutate((current) => ({
       ...current,
@@ -172,6 +197,7 @@ export function WorkoutPage() {
 
     try {
       await finishWorkout(cleaned)
+      stopRest()
       navigate(`/workouts/${cleaned.id}`, { replace: true })
     } catch (error) {
       console.error(error)
@@ -256,6 +282,9 @@ export function WorkoutPage() {
                       {target?.restSec ? ` · отдых ${target.restSec} с` : ''}
                       {previous ? ` · прошлый раз ${previous.weight} кг × ${previous.reps}` : ''}
                     </p>
+                    {item.autoNote ? (
+                      <p className="mt-0.5 text-[10px] text-accent">Авто: {item.autoNote}</p>
+                    ) : null}
                   </div>
                   <Button
                     variant="ghost"
@@ -317,7 +346,7 @@ export function WorkoutPage() {
                         />
                         <button
                           type="button"
-                          onClick={() => updateSet(item.id, set.id, { done: !set.done })}
+                          onClick={() => toggleSetDone(item, set, exercise)}
                           className={cn(
                             'flex h-9 w-9 items-center justify-center rounded-lg border transition-colors',
                             set.done
@@ -378,6 +407,13 @@ export function WorkoutPage() {
                     className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-border py-2 text-[11px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
                   >
                     <Plus size={13} /> Добавить подход
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => startRestFor(item, exercise)}
+                    className="flex w-full items-center justify-center gap-1 rounded-lg border border-border/60 py-1.5 text-[10px] text-faint transition-colors hover:border-accent/40 hover:text-accent"
+                  >
+                    <Timer size={12} /> Отдых {restSeconds(item)} с
                   </button>
                 </div>
               </Card>

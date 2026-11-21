@@ -155,6 +155,11 @@ export function WorkoutDetailPage() {
                   <p className="mt-0.5 text-[10px] text-muted">
                     {item.sets.length} подходов
                   </p>
+                  {item.autoNote ? (
+                    <p className="mt-0.5 text-[10px] text-accent">
+                      Авто: {item.autoNote}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
