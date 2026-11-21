@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { RestTimerBar } from './components/RestTimerBar'
 import { AppShell } from './app/AppShell'
 import { CalendarPage } from './features/calendar/CalendarPage'
@@ -22,6 +23,12 @@ interface AppProps {
 }
 
 export default function App({ catalogError }: AppProps) {
+  const location = useLocation()
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+  }, [location.pathname])
+
   if (catalogError) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-bg px-6 text-center">

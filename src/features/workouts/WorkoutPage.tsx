@@ -207,7 +207,7 @@ export function WorkoutPage() {
 
   return (
     <div className="min-h-dvh bg-bg pb-28 text-text">
-      <header className="sticky top-0 z-30 border-b border-border bg-bg/90 backdrop-blur-xl">
+      <header className="safe-top sticky top-0 z-40 border-b border-border bg-bg">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
           <button
             type="button"
@@ -233,7 +233,7 @@ export function WorkoutPage() {
             </p>
           </div>
 
-          <Button variant="primary" size="sm" onClick={handleFinish}>
+          <Button variant="primary" size="md" onClick={handleFinish}>
             {draft.finishedAt ? 'Сохранить' : 'Завершить'}
           </Button>
         </div>

@@ -64,11 +64,21 @@ assertIncludes(text, 'StrongLifts 5×5')
 
 await page.getByText('Full Body 3×', { exact: true }).first().click()
 await page.getByRole('button', { name: 'Начать', exact: true }).first().waitFor()
+await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+await page.waitForTimeout(200)
 await page.getByRole('button', { name: 'Начать', exact: true }).first().click()
 await page.waitForFunction(() => window.location.hash.startsWith('#/workout/'), null, {
   timeout: 20000,
 })
 await page.getByRole('button', { name: 'Завершить', exact: true }).waitFor()
+const workoutScroll = await page.evaluate(() => window.scrollY)
+if (workoutScroll !== 0) {
+  throw new Error(`Страница тренировки открылась не сверху: scrollY=${workoutScroll}`)
+}
+const finishBox = await page.getByRole('button', { name: 'Завершить', exact: true }).boundingBox()
+if (!finishBox || finishBox.y < 0 || finishBox.y + finishBox.height > 200) {
+  throw new Error(`Кнопка «Завершить» вне верхней панели: ${JSON.stringify(finishBox)}`)
+}
 
 await page.getByLabel('Вес').first().fill('100')
 await page.getByLabel('Повторы').first().fill('5')

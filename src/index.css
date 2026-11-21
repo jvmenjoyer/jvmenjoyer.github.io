@@ -122,6 +122,19 @@
 
   button {
     cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  /* iOS Safari зумит страницу при фокусе на поле с шрифтом меньше 16px.
+     Из-за этого верхняя панель уезжает и кнопки становятся недоступны. */
+  @supports (-webkit-touch-callout: none) {
+    @media (max-width: 767px) {
+      input:not([type='checkbox']):not([type='radio']),
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+    }
   }
 }
 

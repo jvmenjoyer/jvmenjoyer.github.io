@@ -6,7 +6,6 @@ import {
   Plus,
   Sparkles,
 } from 'lucide-react'
-import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Toaster } from '@/components/Toaster'
 import { Button } from '@/components/ui/Button'
@@ -15,12 +14,7 @@ import { buildEmptyWorkout, saveWorkout } from '@/db/repo'
 import { MOBILE_MORE_PREFIXES, NAV_ITEMS } from './nav'
 
 export function AppShell() {
-  const location = useLocation()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
-  }, [location.pathname])
 
   async function startWorkout() {
     const workout = buildEmptyWorkout()
@@ -34,7 +28,9 @@ export function AppShell() {
 
       <div className="md:pl-60">
         <main className="mx-auto w-full max-w-3xl px-4 pb-28 pt-5 md:max-w-4xl md:px-8 md:pb-12 md:pt-8">
-          <Outlet />
+          <div className="safe-top">
+            <Outlet />
+          </div>
         </main>
       </div>
 
