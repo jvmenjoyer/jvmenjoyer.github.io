@@ -13,6 +13,7 @@
     "smoke:coach": "node scripts/smoke-coach.mjs",
     "deploy": "node scripts/deploy-pages.mjs",
     "translate": "node scripts/translate-deepseek.mjs",
+    "art:import": "node scripts/art/import-art.mjs",
     "worker:dev": "npx wrangler dev --config worker/wrangler.jsonc",
     "worker:deploy": "npx wrangler deploy --config worker/wrangler.jsonc",
     "worker:secrets": "npx wrangler secret bulk .env.local --config worker/wrangler.jsonc",

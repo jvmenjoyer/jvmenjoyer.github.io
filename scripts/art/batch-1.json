@@ -1,0 +1,367 @@
+{
+  "version": 1,
+  "title": "Ядро: упражнения из готовых программ",
+  "width": 720,
+  "items": [
+    {
+      "id": "Barbell_Squat",
+      "nameRu": "Приседания со штангой",
+      "nameEn": "Barbell Squat",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing upright, barbell resting across the upper back, feet shoulder-width apart, toes slightly out",
+      "end": "full squat to parallel depth, hips back and down, knees tracking over the toes, torso leaning forward about 40 degrees, barbell still on the upper back"
+    },
+    {
+      "id": "Barbell_Bench_Press_-_Medium_Grip",
+      "nameRu": "Жим лёжа средним хватом",
+      "nameEn": "Barbell Bench Press",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "lying on a flat bench, feet planted on the floor, barbell at chest level, elbows bent about 60 degrees from the torso",
+      "end": "arms extended vertically over the chest, barbell directly above the shoulders, elbows just short of locked"
+    },
+    {
+      "id": "Bent_Over_Barbell_Row",
+      "nameRu": "Тяга штанги в наклоне",
+      "nameEn": "Bent Over Barbell Row",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "hinged forward with the torso at about 45 degrees, knees slightly bent, barbell hanging at arm's length below the shoulders",
+      "end": "barbell pulled to the lower ribs, elbows driven back past the torso, back flat and neutral"
+    },
+    {
+      "id": "Plank",
+      "nameRu": "Планка",
+      "nameEn": "Plank",
+      "equipment": "body only",
+      "view": "side",
+      "frames": 1,
+      "start": "on the floor on forearms and toes, elbows under the shoulders, body in one straight line from heels to head",
+      "end": "same pose held steady"
+    },
+    {
+      "id": "Barbell_Deadlift",
+      "nameRu": "Становая тяга со штангой",
+      "nameEn": "Barbell Deadlift",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "barbell on the floor over mid-foot, hips high, knees bent, arms straight, flat back",
+      "end": "standing tall with the hips fully extended, barbell at mid-thigh, shoulders back"
+    },
+    {
+      "id": "Standing_Military_Press",
+      "nameRu": "Жим стоя",
+      "nameEn": "Standing Military Press",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing, barbell racked at collarbone height, elbows slightly in front of the bar",
+      "end": "barbell locked out overhead, arms straight, ribs down, standing tall"
+    },
+    {
+      "id": "Wide-Grip_Lat_Pulldown",
+      "nameRu": "Тяга верхнего блока широким хватом",
+      "nameEn": "Wide-Grip Lat Pulldown",
+      "equipment": "cable",
+      "view": "three-quarter",
+      "frames": 2,
+      "start": "seated at a lat pulldown station, thighs under the knee pad, arms extended overhead holding a wide bar",
+      "end": "bar pulled to the upper chest, elbows down and back, chest lifted"
+    },
+    {
+      "id": "Hanging_Leg_Raise",
+      "nameRu": "Подъём ног в висе",
+      "nameEn": "Hanging Leg Raise",
+      "equipment": "body only",
+      "view": "side",
+      "frames": 2,
+      "start": "hanging from a pull-up bar with straight arms, legs straight down",
+      "end": "legs raised to horizontal, toes at hip height, torso still"
+    },
+    {
+      "id": "Leg_Press",
+      "nameRu": "Жим ногами",
+      "nameEn": "Leg Press",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "seated in a 45-degree leg press machine, knees bent deeply toward the chest, feet on the platform",
+      "end": "legs extended, knees almost straight, platform pushed away"
+    },
+    {
+      "id": "Incline_Dumbbell_Press",
+      "nameRu": "Жим гантелей на наклонной",
+      "nameEn": "Incline Dumbbell Press",
+      "equipment": "dumbbell",
+      "view": "side",
+      "frames": 2,
+      "start": "lying on a bench inclined 30 degrees, dumbbells at chest level, elbows bent",
+      "end": "dumbbells pressed up over the upper chest, arms extended"
+    },
+    {
+      "id": "Seated_Cable_Rows",
+      "nameRu": "Тяга нижнего блока сидя",
+      "nameEn": "Seated Cable Rows",
+      "equipment": "cable",
+      "view": "side",
+      "frames": 2,
+      "start": "seated on a cable row bench, knees slightly bent, arms extended forward holding a handle",
+      "end": "handle pulled to the abdomen, elbows close to the body, chest up"
+    },
+    {
+      "id": "Dumbbell_Shoulder_Press",
+      "nameRu": "Жим гантелей на плечи",
+      "nameEn": "Dumbbell Shoulder Press",
+      "equipment": "dumbbell",
+      "view": "three-quarter",
+      "frames": 2,
+      "start": "seated on an upright bench, dumbbells at ear height, elbows bent",
+      "end": "dumbbells pressed overhead, arms extended"
+    },
+    {
+      "id": "Barbell_Curl",
+      "nameRu": "Сгибание рук со штангой",
+      "nameEn": "Barbell Curl",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing, barbell held at thigh level with an underhand grip, elbows at the sides",
+      "end": "barbell curled to chin height, elbows fixed at the sides, forearms vertical"
+    },
+    {
+      "id": "Triceps_Pushdown",
+      "nameRu": "Разгибание рук на блоке",
+      "nameEn": "Triceps Pushdown",
+      "equipment": "cable",
+      "view": "side",
+      "frames": 2,
+      "start": "standing at a cable station, elbows bent to 90 degrees, hands at chest height holding a rope",
+      "end": "arms extended down, rope at thigh level, elbows pinned to the sides"
+    },
+    {
+      "id": "Romanian_Deadlift",
+      "nameRu": "Румынская становая тяга",
+      "nameEn": "Romanian Deadlift",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing upright with a barbell at the thighs, shoulders back",
+      "end": "hips pushed back, torso hinged forward about 45 degrees, bar at mid-shin, knees softly bent, flat back"
+    },
+    {
+      "id": "Lying_Leg_Curls",
+      "nameRu": "Сгибание ног лёжа",
+      "nameEn": "Lying Leg Curls",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "lying face down on a leg curl machine, legs straight, pad at the heels",
+      "end": "heels curled toward the glutes, knees bent about 100 degrees, hips flat on the pad"
+    },
+    {
+      "id": "Standing_Calf_Raises",
+      "nameRu": "Подъёмы на носки стоя",
+      "nameEn": "Standing Calf Raises",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "standing on the balls of the feet on a raised platform, heels lowered below the platform",
+      "end": "standing on the toes at full plantar flexion, body straight"
+    },
+    {
+      "id": "Side_Lateral_Raise",
+      "nameRu": "Махи в стороны",
+      "nameEn": "Side Lateral Raise",
+      "equipment": "dumbbell",
+      "view": "front",
+      "frames": 2,
+      "start": "standing, dumbbells at the sides at thigh level, slight bend in the elbows",
+      "end": "arms raised out to the sides to shoulder height, palms down, slight elbow bend"
+    },
+    {
+      "id": "Face_Pull",
+      "nameRu": "Тяга к лицу",
+      "nameEn": "Face Pull",
+      "equipment": "cable",
+      "view": "side",
+      "frames": 2,
+      "start": "standing at a cable set at face height, arms extended forward holding a rope",
+      "end": "rope pulled toward the face, elbows high and wide, hands beside the ears"
+    },
+    {
+      "id": "Hammer_Curls",
+      "nameRu": "Сгибание рук молотковым хватом",
+      "nameEn": "Hammer Curls",
+      "equipment": "dumbbell",
+      "view": "three-quarter",
+      "frames": 2,
+      "start": "standing, dumbbells at the sides with a neutral grip, elbows at the sides",
+      "end": "dumbbells curled to shoulder height, neutral grip maintained, elbows fixed"
+    },
+    {
+      "id": "Dips_-_Triceps_Version",
+      "nameRu": "Отжимания на брусьях на трицепс",
+      "nameEn": "Dips - Triceps Version",
+      "equipment": "body only",
+      "view": "side",
+      "frames": 2,
+      "start": "supported on parallel bars with straight arms, body upright, legs bent behind",
+      "end": "elbows bent to 90 degrees, body lowered between the bars, torso upright"
+    },
+    {
+      "id": "Barbell_Lunge",
+      "nameRu": "Выпады со штангой",
+      "nameEn": "Barbell Lunge",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing with a barbell on the upper back, feet together",
+      "end": "split-stance lunge, front knee bent 90 degrees, back knee just above the floor, torso upright"
+    },
+    {
+      "id": "Leg_Extensions",
+      "nameRu": "Разгибание ног",
+      "nameEn": "Leg Extensions",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "seated in a leg extension machine, knees bent 90 degrees, shins behind the pad",
+      "end": "legs extended forward, shins horizontal"
+    },
+    {
+      "id": "Seated_Leg_Curl",
+      "nameRu": "Сгибание ног сидя",
+      "nameEn": "Seated Leg Curl",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "seated in a leg curl machine, legs extended forward, pad on top of the ankles",
+      "end": "heels curled under the seat, knees bent about 90 degrees"
+    },
+    {
+      "id": "Seated_Calf_Raise",
+      "nameRu": "Подъёмы на носки сидя",
+      "nameEn": "Seated Calf Raise",
+      "equipment": "machine",
+      "view": "side",
+      "frames": 2,
+      "start": "seated in a calf raise machine, pads on the knees, heels lowered below the platform",
+      "end": "heels raised as high as possible, toes on the platform"
+    },
+    {
+      "id": "Seated_Barbell_Military_Press",
+      "nameRu": "Жим штанги сидя",
+      "nameEn": "Seated Barbell Military Press",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "seated on an upright bench, barbell at collarbone height, elbows under the bar",
+      "end": "barbell locked out overhead, arms extended, back against the pad"
+    },
+    {
+      "id": "Pullups",
+      "nameRu": "Подтягивания",
+      "nameEn": "Pullups",
+      "equipment": "body only",
+      "view": "front",
+      "frames": 2,
+      "start": "hanging from a pull-up bar with an overhand grip, arms straight, legs together",
+      "end": "chin above the bar, elbows down, shoulders pulled toward the bar"
+    },
+    {
+      "id": "Cable_Crossover",
+      "nameRu": "Кроссовер на блоке",
+      "nameEn": "Cable Crossover",
+      "equipment": "cable",
+      "view": "front",
+      "frames": 2,
+      "start": "standing between two cable stacks, arms out wide at shoulder height, slight elbow bend",
+      "end": "hands brought together in front of the chest, arms almost straight"
+    },
+    {
+      "id": "Close-Grip_Barbell_Bench_Press",
+      "nameRu": "Жим лёжа узким хватом",
+      "nameEn": "Close-Grip Barbell Bench Press",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "lying on a flat bench, narrow grip, barbell at the chest, elbows tucked close to the body",
+      "end": "arms extended over the chest, barbell above the shoulders"
+    },
+    {
+      "id": "One-Arm_Dumbbell_Row",
+      "nameRu": "Тяга гантели одной рукой в наклоне",
+      "nameEn": "One-Arm Dumbbell Row",
+      "equipment": "dumbbell",
+      "view": "side",
+      "frames": 2,
+      "start": "one hand and knee supported on a bench, torso horizontal, dumbbell hanging below the shoulder",
+      "end": "dumbbell pulled to the hip, elbow driven back"
+    },
+    {
+      "id": "Reverse_Flyes",
+      "nameRu": "Разведения в наклоне",
+      "nameEn": "Reverse Flyes",
+      "equipment": "dumbbell",
+      "view": "three-quarter",
+      "frames": 2,
+      "start": "hinged forward with the torso nearly horizontal, dumbbells hanging below the chest",
+      "end": "arms raised out to the sides, dumbbells at shoulder height"
+    },
+    {
+      "id": "Front_Squat_Clean_Grip",
+      "nameRu": "Фронтальные приседания",
+      "nameEn": "Front Squat (Clean Grip)",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing with a barbell racked on the front delts, elbows high",
+      "end": "full squat to parallel depth, torso upright, elbows high, bar on the front delts"
+    },
+    {
+      "id": "Barbell_Hip_Thrust",
+      "nameRu": "Ягодичный мост со штангой",
+      "nameEn": "Barbell Hip Thrust",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "upper back on a bench, feet flat on the floor, barbell across the hips, hips near the floor",
+      "end": "hips extended so the torso and thighs form a straight line, barbell over the hips"
+    },
+    {
+      "id": "Dips_-_Chest_Version",
+      "nameRu": "Отжимания на брусьях на грудь",
+      "nameEn": "Dips - Chest Version",
+      "equipment": "body only",
+      "view": "side",
+      "frames": 2,
+      "start": "supported on parallel bars with straight arms, torso leaned forward, legs bent behind",
+      "end": "elbows bent to 90 degrees, chest lowered between the bars, torso leaned forward"
+    },
+    {
+      "id": "T-Bar_Row_with_Handle",
+      "nameRu": "Тяга Т-грифа с рукояткой",
+      "nameEn": "T-Bar Row with Handle",
+      "equipment": "barbell",
+      "view": "side",
+      "frames": 2,
+      "start": "standing over a T-bar row machine, torso hinged about 45 degrees, arms extended down holding the handle",
+      "end": "handle pulled to the lower chest, elbows back"
+    },
+    {
+      "id": "EZ-Bar_Curl",
+      "nameRu": "Сгибание рук с EZ-грифом",
+      "nameEn": "EZ-Bar Curl",
+      "equipment": "e-z curl bar",
+      "view": "three-quarter",
+      "frames": 2,
+      "start": "standing, EZ bar held at thigh level with a semi-supinated grip",
+      "end": "EZ bar curled to chin height, elbows fixed at the sides"
+    }
+  ]
+}

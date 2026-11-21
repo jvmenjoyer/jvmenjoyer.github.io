@@ -65,6 +65,19 @@ uv run --python 3.12 --with argostranslate python scripts/translate-exercises.py
 Перевод автоматический; ключевые упражнения можно поправить вручную в
 `public/data/exercises.json`.
 
+### Свои иллюстрации
+
+Фото из free-exercise-db можно заменить на единый набор плоских иллюстраций.
+Стиль, мастер-промт для Gemini, позы для 36 упражнений из пресетов и порядок
+сдачи файлов описаны в [`docs/art-direction.md`](docs/art-direction.md).
+
+```bash
+npm run art:import -- --src "<папка с картинками>" --dry
+```
+
+Скрипт сжимает картинки в WebP, обновляет `exercises.json` и поднимает
+`CATALOG_VERSION`, чтобы новые файлы обошли кеш service worker и IndexedDB.
+
 ## Живая версия
 
 **https://jvmenjoyer.github.io/**
