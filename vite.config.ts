@@ -50,9 +50,12 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /\/data\/exercises\.json$/,
+            urlPattern: /\/data\/exercises\.json(\?.*)?$/,
             handler: 'StaleWhileRevalidate',
-            options: { cacheName: 'athly-data' },
+            options: {
+              cacheName: 'athly-data',
+              expiration: { maxEntries: 3, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
           },
         ],
       },

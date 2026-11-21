@@ -5,29 +5,29 @@ import { ExerciseImage } from '@/components/ExerciseImage'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Field, Input, Select, Textarea } from '@/components/ui/Input'
-import { Modal } from '@/components/ui/Modal'
+import { Input, Select } from '@/components/ui/Input'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { useExercises } from '@/db/hooks'
-import { addCustomExercise } from '@/db/repo'
+import { CreateExerciseModal } from '@/features/exercises/CreateExerciseModal'
 import {
-  EQUIPMENT_LABELS,
   exerciseGroup,
   equipmentLabel,
   GROUP_ORDER,
   levelLabel,
-  LEVEL_LABELS,
   MUSCLE_GROUPS,
   type MuscleGroup,
 } from '@/lib/labels'
 import { cn } from '@/lib/cn'
-import { toast } from '@/store/toast'
 
 type GroupFilter = 'all' | MuscleGroup
 
 export function ExercisesPage() {
   const navigate = useNavigate()
-  const exercises = useExercises()
+  const allExercises = useExercises()
+  const exercises = useMemo(
+    () => allExercises.filter((exercise) => !exercise.hidden),
+    [allExercises],
+  )
   const [search, setSearch] = useState('')
   const [group, setGroup] = useState<GroupFilter>('all')
   const [equipment, setEquipment] = useState('all')
@@ -149,14 +149,13 @@ export function ExercisesPage() {
             >
               <ExerciseImage exercise={exercise} className="h-14 w-14 shrink-0 rounded-xl" />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium">{exercise.nameRu}</span>
+                <span className="line-clamp-2 block text-sm font-medium">
+                  {exercise.nameRu}
+                </span>
                 <span className="mt-0.5 block truncate text-[11px] text-muted">
                   {MUSCLE_GROUPS[exerciseGroup(exercise)]} ·{' '}
-                  {equipmentLabel(exercise.equipment)}
+                  {equipmentLabel(exercise.equipment)} · {levelLabel(exercise.level)}
                 </span>
-              </span>
-              <span className="shrink-0 rounded-md bg-surface-2 px-1.5 py-0.5 text-[9px] uppercase text-faint">
-                {levelLabel(exercise.level)}
               </span>
             </button>
           ))}
@@ -176,9 +175,9 @@ export function ExercisesPage() {
       <CreateExerciseModal
         open={creating}
         onClose={() => setCreating(false)}
-        onCreated={(id) => {
+        onCreated={(exercise) => {
           setCreating(false)
-          navigate(`/exercises/${id}`)
+          navigate(`/exercises/${exercise.id}`)
         }}
       />
     </div>
@@ -207,111 +206,5 @@ function FilterChip({
     >
       {label}
     </button>
-  )
-}
-
-function CreateExerciseModal({
-  open,
-  onClose,
-  onCreated,
-}: {
-  open: boolean
-  onClose: () => void
-  onCreated: (id: string) => void
-}) {
-  const [name, setName] = useState('')
-  const [group, setGroup] = useState<MuscleGroup>('chest')
-  const [equipment, setEquipment] = useState('body only')
-  const [level, setLevel] = useState('beginner')
-  const [instructions, setInstructions] = useState('')
-  const [saving, setSaving] = useState(false)
-
-  async function handleSave() {
-    const trimmed = name.trim()
-    if (!trimmed) {
-      toast('Введите название упражнения', 'error')
-      return
-    }
-
-    setSaving(true)
-    try {
-      const id = await addCustomExercise({
-        nameRu: trimmed,
-        group,
-        equipment,
-        level,
-        category: 'strength',
-        instructionsRu: instructions
-          .split('\n')
-          .map((line) => line.trim())
-          .filter(Boolean),
-      })
-      toast('Упражнение добавлено', 'success')
-      setName('')
-      setInstructions('')
-      onCreated(id)
-    } catch (error) {
-      console.error(error)
-      toast('Не удалось добавить упражнение', 'error')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title="Своё упражнение"
-      description="Появится в базе с пометкой «своё»"
-      footer={
-        <Button variant="primary" size="md" className="flex-1" onClick={handleSave} disabled={saving}>
-          {saving ? 'Сохраняем…' : 'Добавить'}
-        </Button>
-      }
-    >
-      <div className="space-y-3">
-        <Field label="Название">
-          <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Например, Тяга к поясу" autoFocus />
-        </Field>
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Группа мышц">
-            <Select value={group} onChange={(event) => setGroup(event.target.value as MuscleGroup)}>
-              {GROUP_ORDER.map((key) => (
-                <option key={key} value={key}>
-                  {MUSCLE_GROUPS[key]}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Field label="Инвентарь">
-            <Select value={equipment} onChange={(event) => setEquipment(event.target.value)}>
-              {Object.entries(EQUIPMENT_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </Field>
-        </div>
-        <Field label="Уровень">
-          <Select value={level} onChange={(event) => setLevel(event.target.value)}>
-            {Object.entries(LEVEL_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <Field label="Техника" hint="Каждый шаг с новой строки, необязательно">
-          <Textarea
-            value={instructions}
-            onChange={(event) => setInstructions(event.target.value)}
-            placeholder="Исходное положение…\nВыполните…"
-            rows={4}
-          />
-        </Field>
-      </div>
-    </Modal>
   )
 }

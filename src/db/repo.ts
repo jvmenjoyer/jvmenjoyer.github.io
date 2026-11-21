@@ -146,7 +146,7 @@ export async function addCustomExercise(
     | 'category'
     | 'group'
   >,
-): Promise<string> {
+): Promise<Exercise> {
   const stamp = nowISO()
   const exercise: Exercise = {
     id: `custom-${newId()}`,
@@ -166,7 +166,7 @@ export async function addCustomExercise(
     updatedAt: stamp,
   }
   await db.exercises.put(exercise)
-  return exercise.id
+  return exercise
 }
 
 export async function deleteExercise(id: string): Promise<void> {

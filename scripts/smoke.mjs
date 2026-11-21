@@ -43,7 +43,7 @@ await page.goto(`${BASE}/#/exercises`, { waitUntil: 'networkidle' })
 await page.getByRole('heading', { name: 'Упражнения', exact: true }).waitFor()
 await page.waitForTimeout(800)
 text = await bodyText()
-assertIncludes(text, '876 в базе', 'База упражнений не загрузилась')
+assertIncludes(text, '200 в базе', 'База упражнений не загрузилась')
 
 await page.getByPlaceholder('Поиск упражнения').fill('Barbell')
 await page.waitForTimeout(400)
@@ -79,11 +79,14 @@ const finishBox = await page.getByRole('button', { name: 'Завершить', e
 if (!finishBox || finishBox.y < 0 || finishBox.y + finishBox.height > 200) {
   throw new Error(`Кнопка «Завершить» вне верхней панели: ${JSON.stringify(finishBox)}`)
 }
+text = await bodyText()
+assertIncludes(text, 'План: 3 × 5', 'Не показан план подходов')
+assertIncludes(text, 'Подходы', 'Нет блока подходов')
 
 await page.getByLabel('Вес').first().fill('100')
 await page.getByLabel('Повторы').first().fill('5')
 await page.getByRole('button', { name: 'Добавить подход' }).first().click()
-await page.getByLabel('Подход выполнен').first().click()
+await page.getByRole('button', { name: /Отметить подход/ }).first().click()
 await page.getByText('Отдых ·', { exact: false }).first().waitFor({ timeout: 5000 })
 await page.waitForTimeout(300)
 await page.screenshot({ path: `${SHOT_DIR}/athly-workout.png`, fullPage: true })
@@ -133,7 +136,7 @@ assertIncludes(text, 'Разминочные подходы', 'Нет кальк
 await page.goto(`${BASE}/#/settings`, { waitUntil: 'networkidle' })
 await page.getByRole('heading', { name: 'Настройки', exact: true }).waitFor()
 text = await bodyText()
-assertIncludes(text, '876', 'В настройках нет количества упражнений')
+assertIncludes(text, '200', 'В настройках нет количества упражнений')
 assertIncludes(text, 'Автостарт таймера', 'Нет настройки таймера отдыха')
 assertIncludes(text, 'Автопрогрессия', 'Нет настройки автопрогрессии')
 assertIncludes(text, 'Создать копию сейчас', 'Нет автобэкапа')

@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import sharp from 'sharp'
+import { CORE_EXERCISES } from './art/core-exercises.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DATA_DIR = path.join(ROOT, 'scripts', 'data')
@@ -82,8 +83,16 @@ const normalized = raw.map((item) => ({
   }),
 }))
 
-fs.writeFileSync(OUT_JSON, JSON.stringify(normalized), 'utf8')
-console.log(`JSON сохранён: ${normalized.length} упражнений`)
+// Полную базу держим отдельно, а в приложение отдаём только ядро.
+// Вернуть всё: npm run art:catalog -- --all
+fs.writeFileSync(path.join(DATA_DIR, 'exercises.full.json'), JSON.stringify(normalized), 'utf8')
+
+const core = new Set(CORE_EXERCISES)
+const trimmed = normalized.filter((exercise) => core.has(exercise.id))
+fs.writeFileSync(OUT_JSON, JSON.stringify(trimmed), 'utf8')
+console.log(
+  `JSON сохранён: ${trimmed.length} упражнений (полная база: ${normalized.length})`,
+)
 
 const jobs = []
 for (const item of raw) {

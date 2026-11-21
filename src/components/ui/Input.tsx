@@ -9,6 +9,9 @@ import { cn } from '@/lib/cn'
 const base =
   'w-full rounded-xl border border-border bg-surface-2 px-3.5 text-sm text-text placeholder:text-faint transition-colors focus:border-accent/70 focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-50'
 
+const selectBase =
+  'select-chevron w-full appearance-none rounded-xl border border-border bg-surface-2 pl-3.5 pr-9 text-sm text-text transition-colors focus:border-accent/70 focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-50'
+
 export function Input({ className, ...rest }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(base, 'h-11', className)} {...rest} />
 }
@@ -19,7 +22,7 @@ export function Textarea({ className, ...rest }: TextareaHTMLAttributes<HTMLText
 
 export function Select({ className, children, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
-    <select className={cn(base, 'h-11 appearance-none pr-9', className)} {...rest}>
+    <select className={cn(selectBase, 'h-11', className)} {...rest}>
       {children}
     </select>
   )

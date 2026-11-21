@@ -3,8 +3,9 @@ import { PRESET_PROGRAMS } from '@/data/presets'
 import { nowISO } from '@/lib/id'
 import type { AppSettings, Exercise } from './types'
 
-const CATALOG_VERSION = 'ru-llm-1'
-export const CATALOG_URL = '/data/exercises.json'
+const CATALOG_VERSION = 'core-2'
+// Версия в URL — чтобы Service Worker не отдал старый каталог из кеша.
+export const CATALOG_URL = `/data/exercises.json?v=${CATALOG_VERSION}`
 
 const DEFAULT_SETTINGS: AppSettings = {
   id: 'app',
@@ -64,6 +65,18 @@ export async function ensureCatalog(): Promise<number> {
         updatedAt: exercise.updatedAt ?? stamp,
       })),
     )
+
+    // Упражнения, которые убрали из каталога, не удаляем: на них ссылается
+    // история тренировок. Просто прячем из поиска и списков.
+    const keep = new Set(list.map((exercise) => exercise.id))
+    const stale = await db.exercises
+      .filter((exercise) => !exercise.isCustom && !exercise.hidden && !keep.has(exercise.id))
+      .toArray()
+    if (stale.length) {
+      await db.exercises.bulkPut(
+        stale.map((exercise) => ({ ...exercise, hidden: true, updatedAt: stamp })),
+      )
+    }
 
     await db.settings.update('app', {
       catalogVersion: CATALOG_VERSION,

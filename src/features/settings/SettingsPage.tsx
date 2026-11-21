@@ -42,7 +42,7 @@ import {
 } from '@/lib/notifications'
 import { toast } from '@/store/toast'
 
-const APP_VERSION = '0.3.0'
+const APP_VERSION = '0.4.0'
 
 const REST_OPTIONS = [60, 90, 120, 150, 180, 240]
 
@@ -205,7 +205,7 @@ export function SettingsPage() {
               onChange={(event) =>
                 void updateSettings({ defaultRestSec: Number(event.target.value) })
               }
-              className="h-9 w-24 shrink-0 px-2 text-xs"
+              className="h-9 w-24 shrink-0 pl-2 pr-7 text-xs"
               aria-label="Отдых по умолчанию"
             >
               {REST_OPTIONS.map((value) => (
@@ -395,7 +395,10 @@ export function SettingsPage() {
       <Card className="mb-4">
         <CardTitle title="Что внутри" />
         <div className="space-y-2 text-xs">
-          <InfoRow label="Упражнений в базе" value={`${exercises.length}`} />
+          <InfoRow
+            label="Упражнений в базе"
+            value={`${exercises.filter((exercise) => !exercise.hidden).length}`}
+          />
           <InfoRow
             label="Программ"
             value={`${programs.length} (${programs.filter((program) => program.isPreset).length} готовых)`}

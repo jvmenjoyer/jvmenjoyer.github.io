@@ -1,4 +1,4 @@
-import { Check, Plus, Timer, Trash2, X } from 'lucide-react'
+import { Check, Plus, RotateCcw, Timer, Trash2, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ExerciseImage } from '@/components/ExerciseImage'
@@ -137,6 +137,26 @@ export function WorkoutPage() {
     }))
   }
 
+  function repeatPrevious(
+    item: WorkoutExercise,
+    previous: { weight: number; reps: number },
+  ) {
+    mutate((current) => ({
+      ...current,
+      exercises: current.exercises.map((exercise) =>
+        exercise.id === item.id
+          ? {
+              ...exercise,
+              sets: exercise.sets.map((set) =>
+                set.warmup ? set : { ...set, weight: previous.weight, reps: previous.reps },
+              ),
+            }
+          : exercise,
+      ),
+    }))
+    toast(`Подставил ${previous.weight} кг × ${previous.reps}`, 'success')
+  }
+
   function restSeconds(item: WorkoutExercise): number {
     return item.restSec ?? settings?.defaultRestSec ?? 90
   }
@@ -254,6 +274,7 @@ export function WorkoutPage() {
             const previous = lastPerformance(allWorkouts, item.exerciseId, draft.id)
             const target = targetById.get(item.id)
             const groupLabel = item.supersetGroup
+            const isBodyweight = exercise?.equipment === 'body only'
 
             return (
               <Card key={item.id} className="p-3.5">
@@ -278,9 +299,8 @@ export function WorkoutPage() {
                       {groupLabel ? <Badge tone="accent">суперсет {groupLabel}</Badge> : null}
                     </div>
                     <p className="mt-0.5 text-[10px] text-muted">
-                      {target?.targetSets ? `${target.targetSets}×${target.targetReps ?? ''}` : ''}
+                      {target?.targetSets ? `План: ${target.targetSets} × ${target.targetReps ?? '—'}` : 'Без плана'}
                       {target?.restSec ? ` · отдых ${target.restSec} с` : ''}
-                      {previous ? ` · прошлый раз ${previous.weight} кг × ${previous.reps}` : ''}
                     </p>
                     {item.autoNote ? (
                       <p className="mt-0.5 text-[10px] text-accent">Авто: {item.autoNote}</p>
@@ -298,76 +318,106 @@ export function WorkoutPage() {
                 </div>
 
                 <div className="mt-3 space-y-2">
-                  <div className="grid grid-cols-[24px_1fr_1fr_38px_24px] items-center gap-1.5 px-0.5 text-[9px] uppercase tracking-wide text-faint">
-                    <span>#</span>
-                    <span>Вес, кг</span>
-                    <span>Повторы</span>
-                    <span />
-                    <span />
+                  <div className="flex items-center justify-between gap-2 px-0.5">
+                    <span className="text-[11px] font-medium text-muted">
+                      {isBodyweight ? 'Подходы · доп. вес' : 'Подходы'}
+                    </span>
+                    {previous ? (
+                      <button
+                        type="button"
+                        onClick={() => repeatPrevious(item, previous)}
+                        className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-2 px-2 py-1 text-[10px] text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                        aria-label={`Подставить прошлый результат: ${previous.weight} килограмм на ${previous.reps} повторений`}
+                      >
+                        <RotateCcw size={11} />
+                        прошлый раз {previous.weight} × {previous.reps}
+                      </button>
+                    ) : (
+                      <span className="text-[10px] text-faint">первый раз</span>
+                    )}
                   </div>
 
                   {item.sets.map((set, setIndex) => (
                     <div
                       key={set.id}
                       className={cn(
-                        'rounded-lg border px-1.5 py-1.5',
+                        'rounded-lg border px-1 py-1',
                         set.warmup
                           ? 'border-dashed border-border bg-transparent'
                           : 'border-border/60 bg-surface-2/40',
                       )}
                     >
-                      <div className="grid grid-cols-[24px_1fr_1fr_38px_24px] items-center gap-1.5">
-                        <span className="text-center text-[11px] text-faint">
+                      <div className="grid grid-cols-[18px_minmax(0,1fr)_10px_minmax(0,1fr)_44px_22px] items-center gap-1">
+                        <span className="text-center text-[11px] font-medium text-faint">
                           {setIndex + 1}
                         </span>
-                        <input
-                          value={set.weight ? numberToInput(set.weight) : ''}
-                          onChange={(event) =>
-                            updateSet(item.id, set.id, {
-                              weight: parseNumber(event.target.value),
-                            })
-                          }
-                          inputMode="decimal"
-                          placeholder="0"
-                          className="h-9 w-full rounded-lg border border-border bg-surface px-2 text-center text-sm tabular outline-none focus:border-accent/60"
-                          aria-label="Вес"
-                        />
-                        <input
-                          value={set.reps ? String(set.reps) : ''}
-                          onChange={(event) =>
-                            updateSet(item.id, set.id, {
-                              reps: Math.max(0, Math.round(parseNumber(event.target.value))),
-                            })
-                          }
-                          inputMode="numeric"
-                          placeholder="0"
-                          className="h-9 w-full rounded-lg border border-border bg-surface px-2 text-center text-sm tabular outline-none focus:border-accent/60"
-                          aria-label="Повторы"
-                        />
+
+                        <div className="relative">
+                          <input
+                            value={set.weight ? numberToInput(set.weight) : ''}
+                            onChange={(event) =>
+                              updateSet(item.id, set.id, {
+                                weight: parseNumber(event.target.value),
+                              })
+                            }
+                            inputMode="decimal"
+                            placeholder="0"
+                            className="h-11 w-full rounded-lg border border-border bg-surface pl-1.5 pr-6 text-center text-base font-semibold tabular outline-none focus:border-accent/60"
+                            aria-label={`Вес, подход ${setIndex + 1}, килограммы`}
+                          />
+                          <span className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-faint">
+                            кг
+                          </span>
+                        </div>
+
+                        <span className="text-center text-[10px] text-faint">×</span>
+
+                        <div className="relative">
+                          <input
+                            value={set.reps ? String(set.reps) : ''}
+                            onChange={(event) =>
+                              updateSet(item.id, set.id, {
+                                reps: Math.max(0, Math.round(parseNumber(event.target.value))),
+                              })
+                            }
+                            inputMode="numeric"
+                            placeholder="0"
+                            className="h-11 w-full rounded-lg border border-border bg-surface pl-1.5 pr-7 text-center text-base font-semibold tabular outline-none focus:border-accent/60"
+                            aria-label={`Повторы, подход ${setIndex + 1}`}
+                          />
+                          <span className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-faint">
+                            повт
+                          </span>
+                        </div>
+
                         <button
                           type="button"
                           onClick={() => toggleSetDone(item, set, exercise)}
                           className={cn(
-                            'flex h-9 w-9 items-center justify-center rounded-lg border transition-colors',
+                            'flex h-11 w-11 items-center justify-center rounded-lg border transition-colors',
                             set.done
                               ? 'border-accent bg-accent text-accent-ink'
                               : 'border-border bg-surface text-faint',
                           )}
-                          aria-label="Подход выполнен"
+                          aria-label={
+                            set.done
+                              ? `Снять отметку с подхода ${setIndex + 1}`
+                              : `Отметить подход ${setIndex + 1} выполненным`
+                          }
                         >
-                          <Check size={15} />
+                          <Check size={17} />
                         </button>
                         <button
                           type="button"
                           onClick={() => removeSet(item.id, set.id)}
-                          className="flex h-9 w-6 items-center justify-center text-faint transition-colors hover:text-danger"
-                          aria-label="Удалить подход"
+                          className="flex h-11 w-5 items-center justify-center text-faint transition-colors hover:text-danger"
+                          aria-label={`Удалить подход ${setIndex + 1}`}
                         >
                           <X size={14} />
                         </button>
                       </div>
 
-                      <div className="ml-7 mt-1 flex items-center gap-3 text-[10px] text-faint">
+                      <div className="mt-1 flex items-center gap-2 pl-[22px] text-[10px]">
                         <button
                           type="button"
                           onClick={() =>
@@ -382,7 +432,7 @@ export function WorkoutPage() {
                         >
                           разминка
                         </button>
-                        <label className="flex items-center gap-1">
+                        <label className="flex items-center gap-1 text-faint">
                           RPE
                           <input
                             value={set.rpe ? String(set.rpe) : ''}
@@ -395,6 +445,7 @@ export function WorkoutPage() {
                             inputMode="numeric"
                             placeholder="—"
                             className="h-6 w-8 rounded border border-border bg-surface text-center text-[10px] outline-none focus:border-accent/60"
+                            aria-label={`RPE, подход ${setIndex + 1}`}
                           />
                         </label>
                       </div>

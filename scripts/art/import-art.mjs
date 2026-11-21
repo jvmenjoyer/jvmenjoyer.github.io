@@ -57,8 +57,8 @@ const currentVersion = versionMatch?.[1] ?? ''
 
 let artVersion = Number(arg('version', 0))
 if (!artVersion) {
-  const previous = currentVersion.match(/^art-(\d+)$/)
-  artVersion = previous ? Number(previous[1]) + 1 : 1
+  // Номер берём из любого префикса (core-N / art-N), чтобы версии не совпали.
+  artVersion = Number(currentVersion.match(/(\d+)$/)?.[1] ?? 0) + 1
 }
 
 const EXT = /\.(png|jpe?g|webp)$/i

@@ -241,7 +241,7 @@ async function buildSnapshot() {
       db.workouts.toArray(),
       db.programs.toArray(),
       db.measurements.toArray(),
-      db.exercises.count(),
+      db.exercises.filter((exercise) => !exercise.hidden).count(),
       db.settings.get('app'),
     ])
 
@@ -334,6 +334,7 @@ async function searchExercises(args: Record<string, unknown>) {
 
   const exercises = await db.exercises.toArray()
   return exercises
+    .filter((exercise) => !exercise.hidden)
     .filter((exercise) => {
       if (group && exerciseGroup(exercise) !== group) return false
       if (equipment && exercise.equipment !== equipment) return false

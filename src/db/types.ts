@@ -18,6 +18,8 @@ export interface Exercise extends SyncMeta {
   category: string
   images: string[]
   isCustom?: boolean
+  /** Упражнение убрано из базового каталога, но осталось в истории */
+  hidden?: boolean
   /** Группа мышц для кастомных упражнений */
   group?: string
   createdAt?: string

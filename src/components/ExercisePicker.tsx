@@ -1,10 +1,11 @@
-import { Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { ExerciseImage } from '@/components/ExerciseImage'
 import { Input, Select } from '@/components/ui/Input'
 import { Modal } from '@/components/ui/Modal'
 import { useExercises } from '@/db/hooks'
 import type { Exercise } from '@/db/types'
+import { CreateExerciseModal } from '@/features/exercises/CreateExerciseModal'
 import { exerciseGroup, equipmentLabel, GROUP_ORDER, MUSCLE_GROUPS, type MuscleGroup } from '@/lib/labels'
 import { cn } from '@/lib/cn'
 
@@ -26,19 +27,24 @@ export function ExercisePicker({
   description = 'Поиск по названию, мышцам и инвентарю',
 }: ExercisePickerProps) {
   const exercises = useExercises()
+  const visibleExercises = useMemo(
+    () => exercises.filter((exercise) => !exercise.hidden),
+    [exercises],
+  )
   const [search, setSearch] = useState('')
   const [group, setGroup] = useState<GroupFilter>('all')
   const [equipment, setEquipment] = useState('all')
   const [visible, setVisible] = useState(40)
+  const [creating, setCreating] = useState(false)
 
   const equipmentOptions = useMemo(() => {
-    const set = new Set(exercises.map((exercise) => exercise.equipment))
+    const set = new Set(visibleExercises.map((exercise) => exercise.equipment))
     return [...set].sort((a, b) => equipmentLabel(a).localeCompare(equipmentLabel(b), 'ru'))
-  }, [exercises])
+  }, [visibleExercises])
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
-    return exercises.filter((exercise) => {
+    return visibleExercises.filter((exercise) => {
       if (group !== 'all' && exerciseGroup(exercise) !== group) return false
       if (equipment !== 'all' && exercise.equipment !== equipment) return false
       if (!query) return true
@@ -52,7 +58,7 @@ export function ExercisePicker({
         .toLowerCase()
         .includes(query)
     })
-  }, [exercises, group, equipment, search])
+  }, [visibleExercises, group, equipment, search])
 
   const shown = filtered.slice(0, visible)
 
@@ -133,17 +139,26 @@ export function ExercisePicker({
               exercise={exercise}
               className="h-12 w-12 shrink-0 rounded-lg"
             />
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm">{exercise.nameRu}</span>
-              <span className="mt-0.5 block truncate text-[10px] text-muted">
-                {MUSCLE_GROUPS[exerciseGroup(exercise)]} · {equipmentLabel(exercise.equipment)}
+              <span className="min-w-0 flex-1">
+                <span className="line-clamp-2 block text-sm">{exercise.nameRu}</span>
+                <span className="mt-0.5 block truncate text-[10px] text-muted">
+                  {MUSCLE_GROUPS[exerciseGroup(exercise)]} · {equipmentLabel(exercise.equipment)}
+                </span>
               </span>
-            </span>
           </button>
         ))}
 
         {filtered.length === 0 ? (
-          <p className="py-6 text-center text-xs text-muted">Ничего не найдено</p>
+          <div className="py-6 text-center">
+            <p className="text-xs text-muted">Ничего не найдено</p>
+            <button
+              type="button"
+              onClick={() => setCreating(true)}
+              className="mt-3 inline-flex items-center gap-1.5 rounded-xl border border-accent/50 bg-accent-soft px-3 py-2 text-xs font-medium text-accent transition-colors hover:border-accent"
+            >
+              <Plus size={14} /> Добавить «{search.trim() || 'своё'}»
+            </button>
+          </div>
         ) : null}
 
         {visible < filtered.length ? (
@@ -155,7 +170,25 @@ export function ExercisePicker({
             Показать ещё ({filtered.length - visible})
           </button>
         ) : null}
+
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border py-2.5 text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
+        >
+          <Plus size={14} /> Своё упражнение
+        </button>
       </div>
+
+      <CreateExerciseModal
+        open={creating}
+        onClose={() => setCreating(false)}
+        initialName={search.trim()}
+        onCreated={(exercise) => {
+          setCreating(false)
+          onSelect(exercise)
+        }}
+      />
     </Modal>
   )
 }

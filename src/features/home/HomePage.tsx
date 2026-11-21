@@ -179,7 +179,12 @@ export function HomePage() {
           }
         />
         <div className="grid grid-cols-2 gap-2">
-          <QuickLink to="/exercises" icon={<Dumbbell size={17} />} title="Упражнения" hint="876 в базе" />
+          <QuickLink
+            to="/exercises"
+            icon={<Dumbbell size={17} />}
+            title="Упражнения"
+            hint={`${exercises.filter((exercise) => !exercise.hidden).length} в базе`}
+          />
           <QuickLink to="/programs" icon={<ClipboardList size={17} />} title="Программы" hint={`${programs.length} шт.`} />
           <QuickLink to="/calendar" icon={<CalendarDays size={17} />} title="Календарь" hint="История" />
           <QuickLink to="/measurements" icon={<Ruler size={17} />} title="Замеры" hint="Вес тела" />
