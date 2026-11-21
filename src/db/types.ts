@@ -106,3 +106,39 @@ export interface AppSettings extends SyncMeta {
   programsSeeded?: boolean
   createdAt: string
 }
+
+export type CoachRole = 'user' | 'assistant'
+
+export interface CoachActionBase {
+  id: string
+  status: 'pending' | 'applied' | 'cancelled'
+}
+
+export interface CoachProgramAction extends CoachActionBase {
+  type: 'create_program'
+  program: Program
+}
+
+export interface CoachMeasurementAction extends CoachActionBase {
+  type: 'save_measurement'
+  measurement: Measurement
+}
+
+export interface CoachWorkoutAction extends CoachActionBase {
+  type: 'start_workout'
+  workout: Workout
+}
+
+export type CoachAction =
+  | CoachProgramAction
+  | CoachMeasurementAction
+  | CoachWorkoutAction
+
+export interface CoachMessage {
+  id: string
+  role: CoachRole
+  content: string
+  createdAt: string
+  actions?: CoachAction[]
+  error?: boolean
+}

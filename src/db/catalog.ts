@@ -3,7 +3,7 @@ import { PRESET_PROGRAMS } from '@/data/presets'
 import { nowISO } from '@/lib/id'
 import type { AppSettings, Exercise } from './types'
 
-const CATALOG_VERSION = 'en-1'
+const CATALOG_VERSION = 'ru-llm-1'
 export const CATALOG_URL = '/data/exercises.json'
 
 const DEFAULT_SETTINGS: AppSettings = {

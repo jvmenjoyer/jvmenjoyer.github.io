@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './app/AppShell'
 import { CalendarPage } from './features/calendar/CalendarPage'
+import { CoachPage } from './features/coach/CoachPage'
 import { ExerciseDetailPage } from './features/exercises/ExerciseDetailPage'
 import { ExercisesPage } from './features/exercises/ExercisesPage'
 import { HomePage } from './features/home/HomePage'
@@ -46,6 +47,7 @@ export default function App({ catalogError }: AppProps) {
         <Route index element={<HomePage />} />
         <Route path="exercises" element={<ExercisesPage />} />
         <Route path="exercises/:id" element={<ExerciseDetailPage />} />
+        <Route path="coach" element={<CoachPage />} />
         <Route path="programs" element={<ProgramsPage />} />
         <Route path="programs/:id" element={<ProgramDetailPage />} />
         <Route path="programs/:id/edit" element={<ProgramEditorPage />} />

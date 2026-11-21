@@ -1,0 +1,17 @@
+{
+  "name": "athly-coach",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-21",
+  "observability": {
+    "enabled": true,
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.05
+    }
+  },
+  "vars": {
+    "MODEL": "deepseek-flash",
+    "DEEPSEEK_URL": "https://api.deepseek.com/chat/completions",
+    "ALLOWED_ORIGINS": "https://jvmenjoyer.github.io,http://localhost:5173,http://localhost:4175,http://localhost:4176,http://127.0.0.1:4176"
+  }
+}

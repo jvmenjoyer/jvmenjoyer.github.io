@@ -3,6 +3,7 @@ import { db } from './db'
 import { monthRange } from '@/lib/date'
 import type {
   AppSettings,
+  CoachMessage,
   Exercise,
   Measurement,
   Program,
@@ -131,4 +132,14 @@ export function useMeasurements(): Measurement[] {
 
 export function useSettings(): AppSettings | undefined {
   return useLiveQuery(() => db.settings.get('app'), [])
+}
+
+export function useCoachMessages(): CoachMessage[] {
+  return (
+    useLiveQuery(
+      () => db.coachMessages.orderBy('createdAt').toArray(),
+      [],
+      [] as CoachMessage[],
+    ) ?? []
+  )
 }

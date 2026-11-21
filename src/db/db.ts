@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import type {
   AppSettings,
+  CoachMessage,
   Exercise,
   Measurement,
   Program,
@@ -13,6 +14,7 @@ export class AthlyDB extends Dexie {
   workouts!: Table<Workout, string>
   measurements!: Table<Measurement, string>
   settings!: Table<AppSettings, string>
+  coachMessages!: Table<CoachMessage, string>
 
   constructor() {
     super('athly')
@@ -23,6 +25,15 @@ export class AthlyDB extends Dexie {
       workouts: 'id, date, createdAt',
       measurements: 'id, date',
       settings: 'id',
+    })
+
+    this.version(2).stores({
+      exercises: 'id, nameRu, category, level, equipment',
+      programs: 'id, name, isPreset, createdAt',
+      workouts: 'id, date, createdAt',
+      measurements: 'id, date',
+      settings: 'id',
+      coachMessages: 'id, createdAt',
     })
   }
 }

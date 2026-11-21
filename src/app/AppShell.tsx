@@ -1,10 +1,10 @@
 import {
-  CalendarDays,
   ClipboardList,
   Dumbbell,
   Home,
   MoreHorizontal,
   Plus,
+  Sparkles,
 } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -122,10 +122,10 @@ function MobileNav() {
           active={location.pathname.startsWith('/exercises')}
         />
         <MobileNavLink
-          to="/calendar"
-          label="Календарь"
-          icon={CalendarDays}
-          active={location.pathname.startsWith('/calendar')}
+          to="/coach"
+          label="Тренер"
+          icon={Sparkles}
+          active={location.pathname.startsWith('/coach')}
         />
         <MobileNavLink
           to="/programs"

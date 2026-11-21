@@ -15,7 +15,7 @@ import { reseedPresets } from '@/db/catalog'
 import { pluralRu } from '@/lib/format'
 import { toast } from '@/store/toast'
 
-const APP_VERSION = '0.1.0'
+const APP_VERSION = '0.2.0'
 
 export function SettingsPage() {
   const exercises = useExercises()

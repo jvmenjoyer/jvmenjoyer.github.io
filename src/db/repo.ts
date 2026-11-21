@@ -4,6 +4,8 @@ import { round1 } from '@/lib/format'
 import { todayISO } from '@/lib/date'
 import type {
   AppSettings,
+  CoachAction,
+  CoachMessage,
   Exercise,
   Measurement,
   Program,
@@ -183,4 +185,28 @@ export async function updateSettings(
   patch: Partial<Omit<AppSettings, 'id'>>,
 ): Promise<void> {
   await db.settings.update('app', { ...patch, updatedAt: nowISO() })
+}
+
+export async function saveCoachMessage(message: CoachMessage): Promise<void> {
+  await db.coachMessages.put(message)
+}
+
+export async function updateCoachAction(
+  messageId: string,
+  actionId: string,
+  status: CoachAction['status'],
+): Promise<void> {
+  const message = await db.coachMessages.get(messageId)
+  if (!message) return
+
+  await db.coachMessages.put({
+    ...message,
+    actions: message.actions?.map((action) =>
+      action.id === actionId ? { ...action, status } : action,
+    ),
+  })
+}
+
+export async function clearCoachMessages(): Promise<void> {
+  await db.coachMessages.clear()
 }

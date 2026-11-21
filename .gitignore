@@ -27,3 +27,4 @@ dist-ssr
 scripts/data/
 .netlify/
 
+.env.local

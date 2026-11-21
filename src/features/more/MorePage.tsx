@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  CalendarDays,
   ChevronRight,
   ClipboardList,
   Dumbbell,
@@ -23,6 +24,12 @@ interface MoreItem {
 }
 
 const ITEMS: MoreItem[] = [
+  {
+    to: '/calendar',
+    title: 'Календарь',
+    description: 'История тренировок по дням',
+    icon: CalendarDays,
+  },
   {
     to: '/measurements',
     title: 'Замеры',
