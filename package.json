@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "npx --yes netlify deploy --dir=dist --prod",
+    "deploy": "node scripts/deploy-pages.mjs",
     "preview": "vite preview"
   },
   "engines": {

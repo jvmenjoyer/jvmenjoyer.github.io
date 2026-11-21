@@ -53,18 +53,34 @@ uv run --python 3.12 --with argostranslate python scripts/translate-exercises.py
 Перевод автоматический; ключевые упражнения можно поправить вручную в
 `public/data/exercises.json`.
 
+## Живая версия
+
+**https://jvmenjoyer.github.io/**
+
+- iPhone: Safari → «Поделиться» → «На экран Домой».
+- После первого онлайн-запуска приложение работает офлайн (service worker).
+- Данные хранятся только на устройстве.
+
 ## Деплой
 
+Приложение раздаётся с GitHub Pages (ветка `gh-pages` репозитория
+`jvmenjoyer/jvmenjoyer.github.io`).
+
 ```bash
-npm run build
 npm run deploy
 ```
 
-`npm run deploy` использует Netlify CLI. Проект нужно один раз привязать:
+Скрипт `scripts/deploy-pages.mjs` собирает проект, копирует `dist` в ветку
+`gh-pages` и делает force-push. Нужен авторизованный GitHub CLI (`gh auth login`).
 
-```bash
-npx netlify link
-```
+> Netlify не используется: на текущем соединении он обрывает большие файлы
+> (JS/JSON) после ~20 КБ. `netlify.toml` оставлен как альтернатива.
+
+### Установка на iPhone
+
+1. Откройте ссылку в Safari.
+2. «Поделиться» → «На экран Домой».
+3. Откройте с иконки и дайте один раз загрузиться онлайн — дальше офлайн.
 
 ## Ограничения
 
